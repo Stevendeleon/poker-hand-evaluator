@@ -59,7 +59,7 @@ Deno.test("should correctly remove n number of cards from the deck", () => {
 
 /**
  * @note: This is a private method, so we need to test it through a public method (deck.flop())
-  */
+ */
 Deno.test("should correctly burn a card", () => {
   const deck = new Deck();
   deck.shuffle();

@@ -20,7 +20,6 @@ export class Deck {
     }
   }
 
-
   public deal(players: number): Card[][] {
     return Array.from({ length: players }, (_) => this.draw_by(2));
   }
