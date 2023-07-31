@@ -4,25 +4,29 @@ Deno.bench("Card:  Create 1", () => {
   new Card("As");
 });
 
-// Deno.bench({
-//   func: function create_deck_1000x(b: any): void {
-//     b.start();
-//     new Card("As");
-//     b.stop();
-//   },
-//   name: "Card:  Create 1 -> 1,000x",
-//   runs: 1000,
-// });
-
-Deno.bench("Card:  Create Two", () => {
-  new Card("As");
-  new Card("Ad");
+Deno.bench({
+  name: "Card:  Create 1 -> 10,000 times",
+  fn() {
+    for (let i = 0; i < 10000; i++) {
+      new Card("As");
+    }
+  },
 });
 
-Deno.bench("Card:  Create Five", () => {
-  new Card("As");
-  new Card("Ad");
-  new Card("Ah");
-  new Card("Ac");
-  new Card("Ks");
+Deno.bench({
+  name: "Card:  Create 1 -> 100,000 times",
+  fn() {
+    for (let i = 0; i < 100000; i++) {
+      new Card("As");
+    }
+  },
+});
+
+Deno.bench({
+  name: "Card:  Create 1 -> 1,000,000 times",
+  fn() {
+    for (let i = 0; i < 1000000; i++) {
+      new Card("As");
+    }
+  },
 });

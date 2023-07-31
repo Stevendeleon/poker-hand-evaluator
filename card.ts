@@ -4,13 +4,11 @@
 */
 
 export class Card {
-  // Static Properties
   static STR_RANKS = "23456789TJQKA";
   static INT_RANKS: number[] = Array.from({ length: 13 }, (_, i) => i);
   static PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41];
   static INT_SUIT_TO_CHAR_SUIT = "xshxdxxxc";
 
-  // Static Maps
   static CHAR_RANK_TO_INT_RANK: RankMap = new Map(
     Array.from(Card.STR_RANKS, (char, index) => [char, index]),
   );
@@ -26,17 +24,6 @@ export class Card {
     4: "♦",
     8: "♣",
   };
-
-  // Instance Properties
-  public card_int: number = 0;
-
-  constructor(arg: string | number) {
-    if (typeof arg === "string") {
-      return Card.from_string(arg);
-    }
-
-    this.card_int = arg as number;
-  }
 
   static from_string(string: string): Card {
     const rankChar = string[0];
@@ -58,6 +45,16 @@ export class Card {
 
   static from_int(cardInt: number): Card {
     return Object.assign(new Card(0), { card_int: cardInt });
+  }
+
+  public card_int = 0;
+
+  constructor(arg: string | number) {
+    if (typeof arg === "string") {
+      return Card.from_string(arg);
+    }
+
+    this.card_int = arg as number;
   }
 
   toString(): string {

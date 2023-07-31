@@ -1,4 +1,4 @@
-import { Card } from "./card.ts";
+import { Card } from "@/card.ts";
 
 export class Deck {
   public cards: Card[] = [];
@@ -20,8 +20,13 @@ export class Deck {
     }
   }
 
+
   public deal(players: number): Card[][] {
     return Array.from({ length: players }, (_) => this.draw_by(2));
+  }
+
+  public remaining(): number {
+    return this.cards.length;
   }
 
   private draw_by(n: number): Card[] {
@@ -34,6 +39,10 @@ export class Deck {
 
   private remove(n: number): Card[] {
     return this.draw_by(n);
+  }
+
+  public preflop(players: number): Card[][] {
+    return Array.from({ length: players }, (_) => this.draw_by(2));
   }
 
   public flop(): Card[] {
