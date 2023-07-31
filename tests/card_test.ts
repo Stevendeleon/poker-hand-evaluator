@@ -1,4 +1,4 @@
-import { assertEquals, assert } from "https://deno.land/std@0.196.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.196.0/testing/asserts.ts";
 import { Card } from "../card.ts";
 
 Deno.test("Card", () => {
@@ -89,4 +89,13 @@ Deno.test("Card.binary_string", () => {
   assertEquals(card2.binary_string, "00\t0000\t0000100010000000000000010");
 });
 
+Deno.test("Card.from_string", () => {
+  const card = Card.from_string("As");
+  assertEquals(card.toString(), "As");
 
+  const card2 = Card.from_string("2h");
+  assertEquals(card2.toString(), "2h");
+
+  const card3 = Card.from_string("Td");
+  assertEquals(card3.toString(), "Td");
+});
