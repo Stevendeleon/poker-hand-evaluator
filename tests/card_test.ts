@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.196.0/testing/asserts.ts";
-import { Card } from "../card.ts";
+import { assertEquals } from "@std/testing/asserts.ts";
+import { Card } from "@/card.ts";
 
 Deno.test("Card", () => {
   const card = new Card("As");

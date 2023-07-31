@@ -1,4 +1,4 @@
-import { Card } from "./card";
+import { Card } from "./card.ts";
 
 export class Deck {
   public cards: Card[] = [];
@@ -8,7 +8,7 @@ export class Deck {
   }
 
   private create_deck(): Card[] {
-    return Array.from({length: 52}, (_, i) => new Card(i));
+    return Array.from({ length: 52 }, (_, i) => new Card(i));
   }
 
   public shuffle(): void {
@@ -21,11 +21,11 @@ export class Deck {
   }
 
   public deal(players: number): Card[][] {
-    return Array.from({length: players}, _ => this.draw_by(2));
+    return Array.from({ length: players }, (_) => this.draw_by(2));
   }
 
   private draw_by(n: number): Card[] {
-    return Array.from({length: n}, _ => this.cards.pop()!).filter(Boolean);
+    return Array.from({ length: n }, (_) => this.cards.pop()!).filter(Boolean);
   }
 
   private burn(): void {
