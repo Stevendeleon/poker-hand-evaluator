@@ -3,7 +3,12 @@ import { assertEquals, assertNotEquals } from "@std/testing/asserts.ts";
 
 Deno.test("should be able to create a deck of 52 cards", () => {
   const deck = new Deck();
+  const deck2 = new Deck();
+  const deck3 = new Deck();
+  console.log(deck, deck2, deck3);
   assertEquals(deck.remaining(), 52);
+  assertEquals(deck2.remaining(), 52);
+  assertEquals(deck3.remaining(), 52);
 });
 
 Deno.test("should be able to shuffle decks", () => {

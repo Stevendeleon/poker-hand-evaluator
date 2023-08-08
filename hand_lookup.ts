@@ -1,4 +1,4 @@
-import { Card } from "@/card.ts";
+import { Card, primeProductFromRankbits } from "@/card.ts";
 import { combinations } from "@/utils.ts";
 
 type NumberMap = { [key: number]: number };
@@ -7,7 +7,7 @@ type NumberMap = { [key: number]: number };
  * @class HandStrength
  * @classdesc A class for calculating the strength of a poker hand.
  */
-export class HandStrength {
+class LookupTable {
   /**
    * The maximum rank of a Straight Flush hand.
    */
@@ -109,7 +109,7 @@ export class HandStrength {
    */
   private _flushes(): void {
     let rank = 1;
-    const straight_flushes: number[] = [
+    const straightFlushes: number[] = [
       7936,
       3968,
       1984,
@@ -123,60 +123,60 @@ export class HandStrength {
     ];
 
     const flushes: number[] = [];
-    const gen = this._get_lexographically_next_bit_sequence(31);
+    const gen = this._getLexographicallyNextBitSequence(31);
 
-    for (let i = 0; i < 1277 + straight_flushes.length - 1; i++) {
+    for (let i = 0; i < 1277 + straightFlushes.length - 1; i++) {
       const flush = gen.next().value as number;
 
-      let not_sf = true;
-      for (const straight_flush of straight_flushes) {
+      let isStraightFlush = true;
+      for (const straight_flush of straightFlushes) {
         if ((flush ^ straight_flush) === 0) {
-          not_sf = false;
+          isStraightFlush = false;
           break;
         }
       }
 
-      if (not_sf) {
+      if (isStraightFlush) {
         flushes.push(flush);
       }
     }
 
     flushes.reverse();
 
-    for (const straight_flush of straight_flushes) {
-      const prime_product = Card.prime_product_from_rankbits(straight_flush);
-      this.flush_lookup[prime_product] = rank;
+    for (const sf of straightFlushes) {
+      const primeProduct = primeProductFromRankbits(sf);
+      this.flush_lookup[primeProduct] = rank;
       rank++;
     }
 
     rank = this.MAX_FULL_HOUSE + 1;
-    for (const flush of flushes) {
-      const prime_product = Card.prime_product_from_rankbits(flush);
-      this.flush_lookup[prime_product] = rank;
+    for (const f of flushes) {
+      const primeProduct = primeProductFromRankbits(f);
+      this.flush_lookup[primeProduct] = rank;
       rank++;
     }
 
-    this._straight_and_highcards(straight_flushes, flushes);
+    this._straightAndHighCards(straightFlushes, flushes);
   }
 
   /**
    * Generate unsuited lookup table for straights and high cards.
    * @private
    */
-  private _straight_and_highcards(
+  private _straightAndHighCards(
     straights: number[],
     highcards: number[],
   ): void {
     let rank = this.MAX_FLUSH + 1;
     for (const straight of straights) {
-      const prime_product = Card.prime_product_from_rankbits(straight);
+      const prime_product = primeProductFromRankbits(straight);
       this.unsuited_lookup[prime_product] = rank;
       rank++;
     }
 
     rank = this.MAX_PAIR + 1;
     for (const high_card of highcards) {
-      const prime_product = Card.prime_product_from_rankbits(high_card);
+      const prime_product = primeProductFromRankbits(high_card);
       this.unsuited_lookup[prime_product] = rank;
       rank++;
     }
@@ -272,7 +272,7 @@ export class HandStrength {
    * @param bits The input bits.
    * @private
    */
-  private *_get_lexographically_next_bit_sequence(
+  private *_getLexographicallyNextBitSequence(
     bits: number,
   ): Generator<number> {
     let xbits = (bits | (bits - 1)) + 1;
@@ -286,3 +286,5 @@ export class HandStrength {
     }
   }
 }
+
+export const LOOKUP_TABLE = new LookupTable();

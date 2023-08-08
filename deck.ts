@@ -10,10 +10,11 @@ export class Deck {
   public cards: Card[] = [];
 
   /**
-   * Constructs a new instance of the `Deck` class.
+   * Constructs a new instance of the `Deck` class with 52 cards.
+   * @constructor
    */
   constructor() {
-    this.cards = this.create_deck();
+    this.cards = this.create() as Card[];
   }
 
   /**
@@ -21,7 +22,7 @@ export class Deck {
    * @returns An array containing all the cards in the deck.
    * @private
    */
-  private create_deck(): Card[] {
+  private create(): Card[] {
     return Array.from({ length: 52 }, (_, i) => new Card(i));
   }
 
@@ -43,7 +44,7 @@ export class Deck {
    * @returns An array of arrays containing cards dealt to each player.
    */
   public deal(players: number): Card[][] {
-    return Array.from({ length: players }, (_) => this.draw_by(2));
+    return Array.from({ length: players }, (_) => this.draw(2));
   }
 
   /**
@@ -60,7 +61,7 @@ export class Deck {
    * @returns An array of cards drawn from the deck.
    * @private
    */
-  private draw_by(n: number): Card[] {
+  private draw(n: number): Card[] {
     return Array.from({ length: n }, (_) => this.cards.pop()!).filter(Boolean);
   }
 
@@ -79,7 +80,17 @@ export class Deck {
    * @private
    */
   private remove(n: number): Card[] {
-    return this.draw_by(n);
+    return this.draw(n);
+  }
+
+  /**
+   * Removes specific Cards from the deck and returns a deck without them.
+   * @param cards The cards to remove.
+   * @returns A deck without the specified cards.
+   * @private
+   */
+  private removeSpecificCards(cards: Card[]): Card[] {
+    return this.cards.filter((card) => !cards.includes(card));
   }
 
   /**
@@ -88,7 +99,7 @@ export class Deck {
    * @returns An array of arrays containing hole cards dealt to each player.
    */
   public preflop(players: number): Card[][] {
-    return Array.from({ length: players }, (_) => this.draw_by(2));
+    return Array.from({ length: players }, (_) => this.draw(2));
   }
 
   /**

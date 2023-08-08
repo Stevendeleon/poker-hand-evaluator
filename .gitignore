@@ -1,2 +1,5 @@
 .idea
 .vscode
+evaluate.ts
+utils.ts
+hand_lookup.ts

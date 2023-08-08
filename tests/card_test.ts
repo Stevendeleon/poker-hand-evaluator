@@ -1,21 +1,21 @@
 import { assertEquals } from "@std/testing/asserts.ts";
 import {
   Card,
-  card_list_to_pretty_str,
-  card_strings_to_int,
-  prime_product_from_hand,
-  prime_product_from_rankbits,
+  cardStringsToInt,
+  prettifyListOfCards,
+  primeProductFromHands,
+  primeProductFromRankbits,
 } from "@/card.ts";
 
 Deno.test("should be able to create cards", () => {
   const card = new Card("As");
-  assertEquals(card.toString(), "As");
+  assertEquals(card.asString(), "As");
 
   const card2 = new Card("2h");
-  assertEquals(card2.toString(), "2h");
+  assertEquals(card2.asString(), "2h");
 
   const card3 = new Card("Td");
-  assertEquals(card3.toString(), "Td");
+  assertEquals(card3.asString(), "Td");
 });
 
 Deno.test("should be able to represent cards", () => {
@@ -91,69 +91,67 @@ Deno.test("should return a card's prime", () => {
 
 Deno.test("should return a card as a tuple of its rank and suit in a nice format we like to call pretty", () => {
   const card = new Card("As");
-  assertEquals(card.pretty_string, "[ A ♠ ]");
+  assertEquals(card.prettify, "[ A ♠ ]");
 
   const card2 = new Card("2h");
-  assertEquals(card2.pretty_string, "[ 2 ♥ ]");
+  assertEquals(card2.prettify, "[ 2 ♥ ]");
 
   const card3 = new Card("Td");
-  assertEquals(card3.pretty_string, "[ T ♦ ]");
+  assertEquals(card3.prettify, "[ T ♦ ]");
 
   const card4 = new Card("3c");
-  assertEquals(card4.pretty_string, "[ 3 ♣ ]");
+  assertEquals(card4.prettify, "[ 3 ♣ ]");
 });
 
 Deno.test("should return a binary string for a given card", () => {
   const card = new Card("As");
-  assertEquals(card.binary_string, "10000000000000000001011000001001001");
+  assertEquals(card.binaryString, "10000000000000000001011000001001001");
 
   const card2 = new Card("2h");
-  assertEquals(card2.binary_string, "00\t0000\t0000100010000000000000010");
+  assertEquals(card2.binaryString, "00\t0000\t0000100010000000000000010");
 });
 
-// helper functions
+// Helper functions
 
-// card_strings_to_int
-Deno.test("card_strings_to_int: should take in a list of card strings and return a list of integers", () => {
+Deno.test("cardStringsToInt: should take in a list of card strings and return a list of integers", () => {
   const cards = ["As", "2h", "Td", "Jc"];
-  const result = card_strings_to_int(cards);
+  const result = cardStringsToInt(cards);
 
-  assertEquals(result[0].card_int, 268442665);
-  assertEquals(result[1].card_int, 73730);
-  assertEquals(result[2].card_int, 16795671);
-  assertEquals(result[3].card_int, 33589533);
+  assertEquals(result[0].cardIntValue, 268442665);
+  assertEquals(result[1].cardIntValue, 73730);
+  assertEquals(result[2].cardIntValue, 16795671);
+  assertEquals(result[3].cardIntValue, 33589533);
 });
 
-// prime_product_from_hand
-Deno.test("prime_product_from_hand: should take in a list of cards and return the product of their primes", () => {
+Deno.test("primeProductFromHands: should take in a list of cards and return the product of their primes", () => {
   const c1 = new Card("As");
   const c2 = new Card("2h");
   const c3 = new Card("Td");
   const c4 = new Card("Jc");
 
   const cards = [c1, c2, c3, c4];
-  const result = prime_product_from_hand(cards);
+  const result = primeProductFromHands(cards);
 
   assertEquals(result, 54694);
 });
 
-// prime_product_from_rankbits
-Deno.test("prime_product_from_rankbits: should take in a rankbit number and return the product of their primes", () => {
+Deno.test("primeProductFromRankbits: should take in a rankbit number and return the product of their primes", () => {
   const bits = 0b0000000;
-  const result = prime_product_from_rankbits(bits);
+  const result = primeProductFromRankbits(bits);
 
   assertEquals(result, 1);
 });
 
-// card_list_to_pretty_str
-Deno.test("card_list_to_pretty_str: should take in a list of cards and return a pretty string", () => {
+Deno.test("prettifyListOfCards: should take in a list of cards and return a pretty string", () => {
   const c1 = new Card("As");
   const c2 = new Card("2h");
   const c3 = new Card("Td");
   const c4 = new Card("Jc");
 
+  console.log(c1, c2);
+
   const cards = [c1, c2, c3, c4];
-  const result = card_list_to_pretty_str(cards);
+  const result = prettifyListOfCards(cards);
 
   assertEquals(result, "[ A ♠ ] [ 2 ♥ ] [ T ♦ ] [ J ♣ ]");
 });

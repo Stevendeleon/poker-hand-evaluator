@@ -1,4 +1,3 @@
-// Type definitions
 type RankMap = Map<string, number>;
 
 interface SuitMap {
@@ -8,7 +7,6 @@ interface SuitMap {
 interface PrettySuitsMap {
   [key: number]: string;
 }
-
 
 /**
  * Card class
@@ -38,34 +36,32 @@ export class Card {
     8: "♣",
   };
 
-  public card_int: number = 0;
+  public cardIntValue = 0;
 
   /**
    * Constructs a new instance of the `Card` class.
-   * @param arg Either a string or an integer representing a card.
+   * @param arg {string} A string representing a card.
    * @example const card = new Card("As");
-   * @example const card = new Card(0x200000);
    */
-  constructor(arg: string | number) {
-    if (typeof arg === "string") {
-      return Card.from_string(arg);
-    }
-
-    this.card_int = arg as number;
+  constructor(arg: string) {
+    const int = Card.fromString(arg);
+    this.cardIntValue = int;
   }
 
   /**
    * Creates a new instance of the `Card` class from a string.
    * @param {string} c A string representing a card.
    * @returns A new instance of the `Card` class.
-   * @example const card = Card.from_string("As");
+   * @example const card = Card.fromString("As");
    */
-  static from_string(c: string): Card {
+  static fromString(c: string): number {
+    if (c.length !== 2 || !Card.STR_RANKS.includes(c[0]) || !"shdc".includes(c[1])) {
+      throw new Error("Invalid card string.");
+    }
+
     const rankChar = c[0];
     const suitChar = c[1];
-    const rankInt: number | undefined = Card.CHAR_RANK_TO_INT_RANK.get(
-      rankChar,
-    );
+    const rankInt: number | undefined = Card.CHAR_RANK_TO_INT_RANK.get(rankChar);
     const suitInt = Card.CHAR_SUIT_TO_INT_SUIT[suitChar];
     const rankPrime = Card.PRIMES[rankInt!];
 
@@ -75,17 +71,7 @@ export class Card {
 
     const cardInt = bitrank | suit | rank | rankPrime;
 
-    return Card.from_int(cardInt);
-  }
-
-  /**
-   * Creates a new instance of the `Card` class from an integer.
-   * @param {number} c An integer representing a card.
-   * @returns A new instance of the `Card` class.
-   * @example const card = Card.from_int(0x200000);
-   */
-  static from_int(c: number): Card {
-    return Object.assign(new Card(0), { card_int: c });
+    return cardInt;
   }
 
   /**
@@ -93,9 +79,9 @@ export class Card {
    * @returns A string representation of the card.
    * @public
    * @example const card = new Card("As");
-   * card.toString(); // "As"
+   * card.asString(); // "As"
    */
-  public toString(): string {
+  public asString(): string {
     return Card.STR_RANKS[this.rank] + Card.INT_SUIT_TO_CHAR_SUIT[this.suit];
   }
 
@@ -107,7 +93,7 @@ export class Card {
    * card.repr(); // "Card("As")"
    */
   public repr(): string {
-    return `Card("${this.toString()}")`;
+    return `Card("${this.asString()}")`;
   }
 
   // Getters
@@ -121,7 +107,7 @@ export class Card {
    * card.rank; // 12
    */
   get rank(): number {
-    return (this.card_int >> 8) & 0xf;
+    return (this.cardIntValue >> 8) & 0xf;
   }
 
   /**
@@ -132,7 +118,7 @@ export class Card {
    * card.suit; // 1 (spades)
    */
   get suit(): number {
-    return (this.card_int >> 12) & 0xf;
+    return (this.cardIntValue >> 12) & 0xf;
   }
 
   /**
@@ -143,7 +129,7 @@ export class Card {
    * card.bitrank; // 0x200000
    */
   get bitrank(): number {
-    return (this.card_int >> 16) & 0x1fff;
+    return (this.cardIntValue >> 16) & 0x1fff;
   }
 
   /**
@@ -154,7 +140,7 @@ export class Card {
    * card.prime; // 41
    */
   get prime(): number {
-    return this.card_int & 0x3f;
+    return this.cardIntValue & 0x3f;
   }
 
   /**
@@ -162,9 +148,9 @@ export class Card {
    * @returns {string} The string representation of the card in a pretty format.
    * @public
    * @example const card = new Card("As");
-   * card.pretty_string; // "[ A ♠ ]"
+   * card.prettify; // "[ A ♠ ]"
    */
-  get pretty_string(): string {
+  get prettify(): string {
     return `[ ${Card.STR_RANKS[this.rank]} ${Card.PRETTY_SUITS[this.suit]} ]`;
   }
 
@@ -173,10 +159,10 @@ export class Card {
    * @returns {string} The binary string representation of the card.
    * @public
    * @example const card = new Card("As");
-   * card.binary_string; // "10000000000000000001011000001001001"
+   * card.binaryString; // "10000000000000000001011000001001001"
    */
-  get binary_string(): string {
-    const bstr: string[] = this.card_int.toString(2).split("").reverse();
+  get binaryString(): string {
+    const bstr: string[] = this.cardIntValue.toString(2).split("").reverse();
     const output: string[] = Array.from(
       { length: 33 },
       (_, i) => (i % 5 === 0 ? "\t" : "0"),
@@ -196,14 +182,14 @@ export class Card {
 
 /**
  * Returns a list of cards from a list of card strings.
- * @param {string[]} card_strs A list of card strings.
+ * @param {string[]} cards A list of card strings.
  * @returns {Card[]} A list of cards.
  * @public
- * @example const cards = card_strings_to_int(["As", "2h", "Td", "Jc"]);
+ * @example const cards = cardStringsToInt(["As", "2h", "Td", "Jc"]);
  * cards; // [ Card("As"), Card("2h"), Card("Td"), Card("Jc") ]
  */
-export function card_strings_to_int(card_strs: string[]): Card[] {
-  return card_strs.map((card_str) => new Card(card_str));
+export function cardStringsToInt(cards: string[]): Card[] {
+  return cards.map((card) => new Card(card));
 }
 
 /**
@@ -211,10 +197,10 @@ export function card_strings_to_int(card_strs: string[]): Card[] {
  * @param {Card[]} cards A list of cards.
  * @returns {number} A prime product.
  * @public
- * @example const cards = card_strings_to_int(["As", "2h", "Td", "Jc"]);
- * prime_product_from_hand(cards); // 54694
+ * @example const cards = primeProductFromHands(["As", "2h", "Td", "Jc"]);
+ * cards; // 54694
  */
-export function prime_product_from_hand(cards: Card[]): number {
+export function primeProductFromHands(cards: Card[]): number {
   return cards.reduce((product, card) => product * card.prime, 1);
 }
 
@@ -224,9 +210,9 @@ export function prime_product_from_hand(cards: Card[]): number {
  * @returns {number} A prime product.
  * @public
  * @example const rankbits = 0b0000000;
- * prime_product_from_rankbits(rankbits); // 1
+ * primeProductFromRankbits(rankbits); // 1
  */
-export function prime_product_from_rankbits(rankbits: number): number {
+export function primeProductFromRankbits(rankbits: number): number {
   let product = 1;
 
   for (let i = 0; i < Card.INT_RANKS.length; i++) {
@@ -243,10 +229,9 @@ export function prime_product_from_rankbits(rankbits: number): number {
  * @param {Card[]} cards A list of cards.
  * @returns {string} A string of cards in pretty format.
  * @public
- * @example const cards = card_strings_to_int(["As", "2h", "Td", "Jc"]);
- * card_list_to_pretty_str(cards); // "[ A ♠ ] [ 2 ♥ ] [ T ♦ ] [ J ♣ ]"
+ * @example const cards = prettifyListOfCards(["As", "2h", "Td", "Jc"]);
+ * cards; // "[ A ♠ ] [ 2 ♥ ] [ T ♦ ] [ J ♣ ]"
  */
-export function card_list_to_pretty_str(cards: Card[]): string {
-  return cards.map((card) => card.pretty_string).join(" ");
+export function prettifyListOfCards(cards: Card[]): string {
+  return cards.map((card) => card.prettify).join(" ");
 }
-
