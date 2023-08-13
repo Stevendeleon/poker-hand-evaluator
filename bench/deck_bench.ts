@@ -37,6 +37,16 @@ Deno.bench("Deck:  Create & Shuffle", () => {
   deck.shuffle();
 });
 
+Deno.bench({
+  name: "Deck:  Create once, shuffle -> 100 times",
+  fn() {
+    const deck = new Deck();
+    for (let i = 0; i < 100; i++) {
+      deck.shuffle();
+    }
+  },
+});
+
 Deno.bench("Deck:  Deal (9) Players", () => {
   const deck = new Deck();
   deck.deal(9);

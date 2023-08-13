@@ -23,11 +23,23 @@ export class Deck {
    * @private
    */
   private create(): Card[] {
-    return Array.from({ length: 52 }, (_, i) => new Card(i));
+    const ranks = "23456789TJQKA";
+    const suits = "shdc";
+    const deck: Card[] = [];
+
+    for (let i = 0; i < ranks.length; i++) {
+      for (let j = 0; j < suits.length; j++) {
+        const card = new Card(ranks[i] + suits[j]);
+        deck.push(card);
+      }
+    }
+
+    return deck;
   }
 
   /**
    * Shuffles the deck of cards randomly.
+   * #Fisher-Yates shuffle algorithm
    */
   public shuffle(): void {
     const { cards } = this;
