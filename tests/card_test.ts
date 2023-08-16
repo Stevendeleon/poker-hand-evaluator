@@ -155,3 +155,56 @@ Deno.test("prettifyListOfCards: should take in a list of cards and return a pret
 
   assertEquals(result, "[ A ♠ ] [ 2 ♥ ] [ T ♦ ] [ J ♣ ]");
 });
+
+// Rank value tests
+Deno.test("should be able to compare ranks", () => {
+    const c2 = new Card("2h");
+    const c3 = new Card("3h");
+    const c4 = new Card("4h");
+    const c5 = new Card("5h");
+    const c6 = new Card("6h");
+    const c7 = new Card("7h");
+    const c8 = new Card("8h");
+    const c9 = new Card("9h");
+    const cT = new Card("Th");
+    const cJ = new Card("Jh");
+    const cQ = new Card("Qh");
+    const cK = new Card("Kh");
+    const cA = new Card("Ah");
+
+    // ranks
+    assertEquals(c2.rank, 0);
+    assertEquals(c3.rank, 1);
+    assertEquals(c4.rank, 2);
+    assertEquals(c5.rank, 3);
+    assertEquals(c6.rank, 4);
+    assertEquals(c7.rank, 5);
+    assertEquals(c8.rank, 6);
+    assertEquals(c9.rank, 7);
+    assertEquals(cT.rank, 8);
+    assertEquals(cJ.rank, 9);
+    assertEquals(cQ.rank, 10);
+    assertEquals(cK.rank, 11);
+    assertEquals(cA.rank, 12);
+
+    // comparisons
+    assertEquals(c2.rank < c3.rank, true);
+    assertEquals(c3.rank < c4.rank, true);
+    assertEquals(c4.rank < c5.rank, true);
+    assertEquals(c5.rank < c6.rank, true);
+    assertEquals(c6.rank < c7.rank, true);
+    assertEquals(c7.rank < c8.rank, true);
+    assertEquals(c8.rank < c9.rank, true);
+    assertEquals(c9.rank < cT.rank, true);
+    assertEquals(cT.rank < cJ.rank, true);
+    assertEquals(cJ.rank < cQ.rank, true);
+    assertEquals(cQ.rank < cK.rank, true);
+    assertEquals(cK.rank < cA.rank, true);
+
+    // rank equality
+    const c2b = new Card("2d");
+    assertEquals(c2.rank === c2b.rank, true);
+
+
+
+});
