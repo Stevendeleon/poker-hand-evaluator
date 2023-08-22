@@ -213,7 +213,6 @@ export function getPrimeProductFromCards(cards: PlayingCard[]): number {
   return cards.reduce((product, card) => product * card.primeNumber, 1);
 }
 
-
 export function getPrimeProductFromRankbits(rankBits: number): number {
   let product = 1;
 
