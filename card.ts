@@ -165,7 +165,7 @@ export class PlayingCard {
    * @return {string} The string representation of the object.
    */
   get repr(): string {
-    return `PlayingCard(${this.output})`;
+    return `Card("${this.output}")`;
   }
 
   /**
@@ -213,10 +213,8 @@ export function getPrimeProductFromCards(cards: PlayingCard[]): number {
   return cards.reduce((product, card) => product * card.primeNumber, 1);
 }
 
-export function prime_product_from_rankbits(rankbits: number): number {
-=======
+
 export function getPrimeProductFromRankbits(rankBits: number): number {
->>>>>>> 53cbd75410de914734c7e3c6d62a98e1014f5308
   let product = 1;
 
   for (let i = 0; i < PlayingCard.RANK_VALUES.length; i++) {
@@ -227,22 +225,3 @@ export function getPrimeProductFromRankbits(rankBits: number): number {
 
   return product;
 }
-<<<<<<< HEAD
-
-export function card_list_to_pretty_str(cards: Card[]): string {
-  return cards.map((card) => card.pretty_string).join(" ");
-}
-
-// Type definitions
-
-type RankMap = Map<string, number>;
-
-interface SuitMap {
-  [key: string]: number;
-}
-
-interface PrettySuitsMap {
-  [key: number]: string;
-}
-=======
->>>>>>> 53cbd75410de914734c7e3c6d62a98e1014f5308

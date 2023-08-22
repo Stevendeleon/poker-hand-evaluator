@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/testing/asserts.ts";
-import { PlayingCard } from "@/card.ts";
+import { PlayingCard, convertCardStringsToPlayingCards } from "@/card.ts";
 
 Deno.test("should be able to create cards", () => {
   const card = new PlayingCard("As");
@@ -53,16 +53,16 @@ Deno.test("should be able to represent cards", () => {
 //  * @note: a Deuce (2) is the lowest rank at 0
 //  * @note: an Ace (A) is the highest rank at 12
 //  */
-// Deno.test("should be able to determine a card's specific rank", () => {
-//   const card = new PlayingCard("As");
-//   assertEquals(card.rank, 12);
-//
-//   const card2 = new PlayingCard("2h");
-//   assertEquals(card2.rank, 0);
-//
-//   const card3 = new PlayingCard("Td");
-//   assertEquals(card3.rank, 8);
-// });
+Deno.test("should be able to determine a card's specific rank", () => {
+  const card = new PlayingCard("As");
+  assertEquals(card.rank, 12);
+
+  const card2 = new PlayingCard("2h");
+  assertEquals(card2.rank, 0);
+
+  const card3 = new PlayingCard("Td");
+  assertEquals(card3.rank, 8);
+});
 //
 // /**
 //  * @note: a Spade (♠) is mapped to 1
@@ -70,78 +70,78 @@ Deno.test("should be able to represent cards", () => {
 //  * @note: a Diamond (♦) is mapped to 4
 //  * @note: a Club (♣) is mapped to 8
 //  */
-// Deno.test("should be able to map a card's Suit correctly", () => {
-//   const card = new PlayingCard("As");
-//   assertEquals(card.suit, 1);
-//
-//   const card2 = new PlayingCard("2h");
-//   assertEquals(card2.suit, 2);
-//
-//   const card3 = new PlayingCard("Td");
-//   assertEquals(card3.suit, 4);
-//
-//   const card4 = new PlayingCard("Jc");
-//   assertEquals(card4.suit, 8);
-// });
-//
-// Deno.test("should return a card's bitrank", () => {
-//   const card = new PlayingCard("As");
-//   assertEquals(card.bitrank, 1 << 12);
-//
-//   const card2 = new PlayingCard("2h");
-//   assertEquals(card2.bitrank, 1);
-//
-//   const card3 = new PlayingCard("Td");
-//   assertEquals(card3.bitrank, 1 << 8);
-//
-//   const card4 = new PlayingCard("Jc");
-//   assertEquals(card4.bitrank, 1 << 9);
-// });
-//
-// Deno.test("should return a card's prime", () => {
-//   const card = new PlayingCard("As");
-//   assertEquals(card.prime, 41);
-//
-//   const card2 = new PlayingCard("2h");
-//   assertEquals(card2.prime, 2);
-//
-//   const card3 = new PlayingCard("Td");
-//   assertEquals(card3.prime, 23);
-// });
-//
-// Deno.test("should return a card as a tuple of its rank and suit in a nice format we like to call pretty", () => {
-//   const card = new PlayingCard("As");
-//   assertEquals(card.prettify, "[ A ♠ ]");
-//
-//   const card2 = new PlayingCard("2h");
-//   assertEquals(card2.prettify, "[ 2 ♥ ]");
-//
-//   const card3 = new PlayingCard("Td");
-//   assertEquals(card3.prettify, "[ T ♦ ]");
-//
-//   const card4 = new PlayingCard("3c");
-//   assertEquals(card4.prettify, "[ 3 ♣ ]");
-// });
-//
-// Deno.test("should return a binary string for a given card", () => {
-//   const card = new PlayingCard("As");
-//   assertEquals(card.binaryString, "10000000000000000001011000001001001");
-//
-//   const card2 = new PlayingCard("2h");
-//   assertEquals(card2.binaryString, "00\t0000\t0000100010000000000000010");
-// });
-//
-// // Helper functions
-//
-// Deno.test("cardStringsToInt: should take in a list of card strings and return a list of integers", () => {
-//   const cards = ["As", "2h", "Td", "Jc"];
-//   const result = cardStringsToInt(cards);
-//
-//   assertEquals(result[0].cardIntValue, 268442665);
-//   assertEquals(result[1].cardIntValue, 73730);
-//   assertEquals(result[2].cardIntValue, 16795671);
-//   assertEquals(result[3].cardIntValue, 33589533);
-// });
+Deno.test("should be able to map a card's Suit correctly", () => {
+  const card = new PlayingCard("As");
+  assertEquals(card.suit, 1);
+
+  const card2 = new PlayingCard("2h");
+  assertEquals(card2.suit, 2);
+
+  const card3 = new PlayingCard("Td");
+  assertEquals(card3.suit, 4);
+
+  const card4 = new PlayingCard("Jc");
+  assertEquals(card4.suit, 8);
+});
+
+Deno.test("should return a card's bitrank using binaryRankValue", () => {
+  const card = new PlayingCard("As");
+  assertEquals(card.binaryRankValue, 1 << 12);
+
+  const card2 = new PlayingCard("2h");
+  assertEquals(card2.binaryRankValue, 1);
+
+  const card3 = new PlayingCard("Td");
+  assertEquals(card3.binaryRankValue, 1 << 8);
+
+  const card4 = new PlayingCard("Jc");
+  assertEquals(card4.binaryRankValue, 1 << 9);
+});
+
+Deno.test("should return a card's prime", () => {
+  const card = new PlayingCard("As");
+  assertEquals(card.primeNumber, 41);
+
+  const card2 = new PlayingCard("2h");
+  assertEquals(card2.primeNumber, 2);
+
+  const card3 = new PlayingCard("Td");
+  assertEquals(card3.primeNumber, 23);
+});
+
+
+Deno.test("should return a binary string for a given card", () => {
+  const card = new PlayingCard("As");
+  assertEquals(card.binaryStringValue, "10000000000000000001011000001001001");
+
+  const card2 = new PlayingCard("2h");
+  assertEquals(card2.binaryStringValue, "00\t0000\t0000100010000000000000010");
+});
+
+// Helper functions
+
+Deno.test("convertCardStringsToPlayingCards: should take in a list of card strings and return a list of PlayingCards", () => {
+  const cards = ["As", "2h", "Td", "Jc"];
+  const result = convertCardStringsToPlayingCards(cards);
+
+   assertEquals(result instanceof Array, true);
+    assertEquals(result.length, 4);
+    assertEquals(result[0].output, "As");
+    assertEquals(result[1].output, "2h");
+    assertEquals(result[2].output, "Td");
+    assertEquals(result[3].output, "Jc");
+
+    assertEquals(result[0].repr, 'Card("As")');
+    assertEquals(result[1].repr, 'Card("2h")');
+    assertEquals(result[2].repr, 'Card("Td")');
+    assertEquals(result[3].repr, 'Card("Jc")');
+
+    assertEquals(result[0].rank, 12);
+    assertEquals(result[1].rank, 0);
+    assertEquals(result[2].rank, 8);
+    assertEquals(result[3].rank, 9);
+
+});
 //
 // Deno.test("primeProductFromHands: should take in a list of cards and return the product of their primes", () => {
 //   const c1 = new PlayingCard("As");
