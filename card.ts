@@ -1,15 +1,3 @@
-// Type definitions
-type RankMap = Map<string, number>;
-
-interface SuitMap {
-  [key: string]: number;
-}
-
-interface PrettySuitsMap {
-  [key: number]: string;
-}
-
-
 /**
  * Card class
  * @class Card
@@ -218,14 +206,6 @@ export function prime_product_from_hand(cards: Card[]): number {
   return cards.reduce((product, card) => product * card.prime, 1);
 }
 
-/**
- * Returns a prime product from a rankbits.
- * @param {number} rankbits A rankbits.
- * @returns {number} A prime product.
- * @public
- * @example const rankbits = 0b0000000;
- * prime_product_from_rankbits(rankbits); // 1
- */
 export function prime_product_from_rankbits(rankbits: number): number {
   let product = 1;
 
@@ -238,15 +218,18 @@ export function prime_product_from_rankbits(rankbits: number): number {
   return product;
 }
 
-/**
- * Returns a string of cards in pretty format from a list of cards.
- * @param {Card[]} cards A list of cards.
- * @returns {string} A string of cards in pretty format.
- * @public
- * @example const cards = card_strings_to_int(["As", "2h", "Td", "Jc"]);
- * card_list_to_pretty_str(cards); // "[ A ♠ ] [ 2 ♥ ] [ T ♦ ] [ J ♣ ]"
- */
 export function card_list_to_pretty_str(cards: Card[]): string {
   return cards.map((card) => card.pretty_string).join(" ");
 }
 
+// Type definitions
+
+type RankMap = Map<string, number>;
+
+interface SuitMap {
+  [key: string]: number;
+}
+
+interface PrettySuitsMap {
+  [key: number]: string;
+}
