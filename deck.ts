@@ -1,4 +1,4 @@
-import { Card } from "@/card.ts";
+import { PlayingCard } from "@/card.ts";
 
 /**
  * Represents a standard deck of playing cards.
@@ -7,14 +7,14 @@ export class Deck {
   /**
    * The array containing all the cards in the deck.
    */
-  public cards: Card[] = [];
+  public cards: PlayingCard[] = [];
 
   /**
    * Constructs a new instance of the `Deck` class with 52 cards.
    * @constructor
    */
   constructor() {
-    this.cards = this.create() as Card[];
+    this.cards = this.create() as PlayingCard[];
   }
 
   /**
@@ -22,14 +22,14 @@ export class Deck {
    * @returns An array containing all the cards in the deck.
    * @private
    */
-  private create(): Card[] {
+  private create(): PlayingCard[] {
     const ranks = "23456789TJQKA";
     const suits = "shdc";
-    const deck: Card[] = [];
+    const deck: PlayingCard[] = [];
 
     for (let i = 0; i < ranks.length; i++) {
       for (let j = 0; j < suits.length; j++) {
-        const card = new Card(ranks[i] + suits[j]);
+        const card = new PlayingCard(ranks[i] + suits[j]);
         deck.push(card);
       }
     }
@@ -55,7 +55,7 @@ export class Deck {
    * @param players The number of players to deal cards to.
    * @returns An array of arrays containing cards dealt to each player.
    */
-  public deal(players: number): Card[][] {
+  public deal(players: number): PlayingCard[][] {
     return Array.from({ length: players }, (_) => this.draw(2));
   }
 
@@ -73,7 +73,7 @@ export class Deck {
    * @returns An array of cards drawn from the deck.
    * @private
    */
-  private draw(n: number): Card[] {
+  private draw(n: number): PlayingCard[] {
     return Array.from({ length: n }, (_) => this.cards.pop()!).filter(Boolean);
   }
 
@@ -91,7 +91,7 @@ export class Deck {
    * @returns An array of cards removed from the deck.
    * @private
    */
-  private remove(n: number): Card[] {
+  private remove(n: number): PlayingCard[] {
     return this.draw(n);
   }
 
@@ -101,7 +101,7 @@ export class Deck {
    * @returns A deck without the specified cards.
    * @private
    */
-  private removeSpecificCards(cards: Card[]): Card[] {
+  private removeSpecificCards(cards: PlayingCard[]): PlayingCard[] {
     return this.cards.filter((card) => !cards.includes(card));
   }
 
@@ -110,7 +110,7 @@ export class Deck {
    * @param players The number of players to deal hole cards to.
    * @returns An array of arrays containing hole cards dealt to each player.
    */
-  public preflop(players: number): Card[][] {
+  public preflop(players: number): PlayingCard[][] {
     return Array.from({ length: players }, (_) => this.draw(2));
   }
 
@@ -118,7 +118,7 @@ export class Deck {
    * Deals three community cards in Texas Hold'em (Flop).
    * @returns An array containing three community cards (the flop).
    */
-  public flop(): Card[] {
+  public flop(): PlayingCard[] {
     this.burn();
     return this.remove(3);
   }
@@ -127,7 +127,7 @@ export class Deck {
    * Deals one community card in Texas Hold'em (Turn).
    * @returns An array containing one community card (the turn).
    */
-  public turn(): Card[] {
+  public turn(): PlayingCard[] {
     this.burn();
     return this.remove(1);
   }
@@ -136,7 +136,7 @@ export class Deck {
    * Deals one community card in Texas Hold'em (River).
    * @returns An array containing one community card (the river).
    */
-  public river(): Card[] {
+  public river(): PlayingCard[] {
     this.burn();
     return this.remove(1);
   }

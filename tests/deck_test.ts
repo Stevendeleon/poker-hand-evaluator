@@ -24,7 +24,7 @@ Deno.test("should be able to output cards correctly from the deck", () => {
   const cards = deck.cards;
   deck.shuffle();
 
-  assertEquals(cards[0].asString().length, 2);
+  assertEquals(cards[0].output.length, 2);
 });
 
 Deno.test("should be able to deal cards based on n number of players", () => {

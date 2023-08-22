@@ -1,175 +1,201 @@
-type RankMap = Map<string, number>;
+/**
+ * Represents a card rank mapping where each card rank is associated with a numeric value.
+ * @typedef {Map<string, number>} CardRankMapping
+ */
+type CardRankMapping = Map<string, number>;
 
-interface SuitMap {
+/**
+ * Represents a mapping of card suits to their corresponding numeric values.
+ * @interface
+ */
+interface CardSuitMapping {
   [key: string]: number;
 }
 
-interface PrettySuitsMap {
-  [key: number]: string;
-}
-
 /**
- * Card class
- * @class Card
- * @classdesc Represents a single playing card in a standard deck of 52 cards.
- * @note This class uses the 32-bit integer representation of a card.
- * @example const card = new Card("As");
+ * @class
+ * @description Represents a card.
+ *
+ * @note PlayingCard class represents a card with a rank and suit. Each card is associated
+ * with a unique integer value. This class also provides methods to retrieve the rank and suit
+ * of the card and their binary representations.
+ * @example const card = new PlayingCard("As");
  */
-export class Card {
-  static STR_RANKS = "23456789TJQKA";
-  static INT_RANKS: number[] = Array.from({ length: 13 }, (_, i) => i);
-  static PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41];
-  static INT_SUIT_TO_CHAR_SUIT = "xshxdxxxc";
-  static CHAR_RANK_TO_INT_RANK: RankMap = new Map(
-    Array.from(Card.STR_RANKS, (char, index) => [char, index]),
+export class PlayingCard {
+  /**
+   * Represents a string containing the ranks of playing cards.
+   *
+   * @constant
+   * @type {string}
+   */
+  static RANK_STRINGS = "23456789TJQKA";
+  /**
+   * Represents the possible rank values for a set of cards.
+   * The RANK_VALUES variable is an array of numbers from 0 to 12, inclusive.
+   * Each number represents a specific rank value for a card.
+   *
+   * @type {number[]}
+   */
+  static RANK_VALUES: number[] = Array.from({ length: 13 }, (_, i) => i);
+  /**
+   * Represents a constant array of prime numbers.
+   *
+   * @const
+   * @type {number[]}
+   * @desc This variable stores an array of prime numbers from 2 to 41, inclusive.
+   *       Prime numbers are integers greater than 1 that have no positive divisors
+   *       other than 1 and themselves.
+   */
+  static PRIME_NUMBERS = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41];
+  /**
+   * A mapping variable that maps integer values to corresponding character values for a specific suit.
+   * The mapping values are in the form of a string.
+   *
+   * @type {string}
+   */
+  static SUIT_INT_TO_CHAR_MAPPING = "xshxdxxxc";
+  /**
+   * A mapping between rank characters and their corresponding integer values.
+   *
+   * @type {CardRankMapping}
+   */
+  static RANK_CHAR_TO_INT_MAPPING: CardRankMapping = new Map(
+    Array.from(PlayingCard.RANK_STRINGS, (char, index) => [char, index]),
   );
-  static CHAR_SUIT_TO_INT_SUIT: SuitMap = {
+  /**
+   * Represents a mapping of suit characters to integer values.
+   * @typedef {Object} CardSuitMapping
+   * @property {number} s - The integer value representing the spades suit ('s').
+   * @property {number} h - The integer value representing the hearts suit ('h').
+   * @property {number} d - The integer value representing the diamonds suit ('d').
+   * @property {number} c - The integer value representing the clubs suit ('c').
+   */
+  static SUIT_CHAR_TO_INT_MAPPING: CardSuitMapping = {
     s: 1, // spades
     h: 2, // hearts
     d: 4, // diamonds
     c: 8, // clubs
   };
-  static PRETTY_SUITS: PrettySuitsMap = {
-    1: "♠",
-    2: "♥",
-    4: "♦",
-    8: "♣",
-  };
-
-  public cardIntValue = 0;
 
   /**
-   * Constructs a new instance of the `Card` class.
-   * @param arg {string} A string representing a card.
-   * @example const card = new Card("As");
+   * Represents the integer value of a card.
+   *
+   * @type {number}
+   */
+  public intValueOfCard = 0;
+
+  /**
+   * Constructs a new instance of the class.
+   *
+   * @param {string} arg - The string representation of the playing card.
+   *
+   * @return {void}
    */
   constructor(arg: string) {
-    const int = Card.fromString(arg);
-    this.cardIntValue = int;
+    this.intValueOfCard = PlayingCard.fromString(arg);
   }
 
   /**
-   * Creates a new instance of the `Card` class from a string.
-   * @param {string} c A string representing a card.
-   * @returns A new instance of the `Card` class.
-   * @example const card = Card.fromString("As");
+   * Converts a string representation of a card to its corresponding integer value.
+   * @param {string} c - The string representation of the card.
+   * @throws {Error} If the string has an invalid length, rank character, or suit character.
+   * @returns {number} The integer value of the card.
    */
   static fromString(c: string): number {
-    if (c.length !== 2 || !Card.STR_RANKS.includes(c[0]) || !"shdc".includes(c[1])) {
-      throw new Error("Invalid card string.");
+    if (c.length !== 2) throw new Error("Invalid card string length");
+
+    const rankCharacter = c[0];
+    const suitCharacter = c[1];
+
+    if (!PlayingCard.RANK_CHAR_TO_INT_MAPPING.has(rankCharacter)) {
+      throw new Error("Invalid rank character");
+    }
+    if (!(suitCharacter in PlayingCard.SUIT_CHAR_TO_INT_MAPPING)) {
+      throw new Error("Invalid suit character");
     }
 
-    const rankChar = c[0];
-    const suitChar = c[1];
-    const rankInt: number | undefined = Card.CHAR_RANK_TO_INT_RANK.get(rankChar);
-    const suitInt = Card.CHAR_SUIT_TO_INT_SUIT[suitChar];
-    const rankPrime = Card.PRIMES[rankInt!];
+    const integerValueOfRank: number | undefined = PlayingCard
+      .RANK_CHAR_TO_INT_MAPPING.get(rankCharacter);
+    const integerValueOfSuit =
+      PlayingCard.SUIT_CHAR_TO_INT_MAPPING[suitCharacter];
+    const primeNumberOfRank = PlayingCard.PRIME_NUMBERS[integerValueOfRank!];
 
-    const bitrank = 1 << rankInt! << 16;
-    const suit = suitInt << 12;
-    const rank = rankInt! << 8;
+    const binaryValueOfRank = 1 << integerValueOfRank! << 16;
+    const suit = integerValueOfSuit << 12;
+    const rank = integerValueOfRank! << 8;
 
-    const cardInt = bitrank | suit | rank | rankPrime;
+    const integerValueOfCard = binaryValueOfRank | suit | rank |
+      primeNumberOfRank;
 
-    return cardInt;
+    return integerValueOfCard;
   }
 
   /**
-   * Returns a string representation of the card.
-   * @returns A string representation of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.asString(); // "As"
-   */
-  public asString(): string {
-    return Card.STR_RANKS[this.rank] + Card.INT_SUIT_TO_CHAR_SUIT[this.suit];
-  }
-
-  /**
-   * Returns a representation of the card.
-   * @returns A string representation of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.repr(); // "Card("As")"
-   */
-  public repr(): string {
-    return `Card("${this.asString()}")`;
-  }
-
-  // Getters
-  // -------
-
-  /**
-   * Returns the rank of the card.
+   * Retrieves the rank of a card.
+   *
    * @returns {number} The rank of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.rank; // 12
+   * @example const card = new PlayingCard("As"); // 0x0001b1
    */
   get rank(): number {
-    return (this.cardIntValue >> 8) & 0xf;
+    return (this.intValueOfCard >> 8) & 0xf;
   }
 
   /**
-   * Returns the suit of the card.
+   * Retrieves the suit of a card.
+   *
    * @returns {number} The suit of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.suit; // 1 (spades)
    */
   get suit(): number {
-    return (this.cardIntValue >> 12) & 0xf;
+    return (this.intValueOfCard >> 12) & 0xf;
   }
 
   /**
-   * Returns the bitrank of the card.
-   * @returns {number} The bitrank of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.bitrank; // 0x200000
+   * Returns a string representation of the playing card.
+   *
+   * @returns {string} The string representation of the playing card.
    */
-  get bitrank(): number {
-    return (this.cardIntValue >> 16) & 0x1fff;
+  get output(): string {
+    return PlayingCard.RANK_STRINGS[this.rank] +
+      PlayingCard.SUIT_INT_TO_CHAR_MAPPING[this.suit];
   }
 
   /**
-   * Returns the prime of the card.
-   * @returns {number} The prime of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.prime; // 41
+   * Returns a string representation of the object.
+   *
+   * @return {string} The string representation of the object.
    */
-  get prime(): number {
-    return this.cardIntValue & 0x3f;
+  get repr(): string {
+    return `PlayingCard(${this.output})`;
   }
 
   /**
-   * Returns the string representation of the card in a pretty format.
-   * @returns {string} The string representation of the card in a pretty format.
-   * @public
-   * @example const card = new Card("As");
-   * card.prettify; // "[ A ♠ ]"
+   * Retrieves the binary rank value of a card.
+   *
+   * @returns {number} The binary rank value of the card.
    */
-  get prettify(): string {
-    return `[ ${Card.STR_RANKS[this.rank]} ${Card.PRETTY_SUITS[this.suit]} ]`;
+  get binaryRankValue(): number {
+    return (this.intValueOfCard >> 16) & 0x1fff;
   }
 
   /**
-   * Returns the binary string representation of the card.
-   * @returns {string} The binary string representation of the card.
-   * @public
-   * @example const card = new Card("As");
-   * card.binaryString; // "10000000000000000001011000001001001"
+   * Returns the prime number associated with the current object.
+   *
+   * @returns {number} The prime number.
    */
-  get binaryString(): string {
-    const bstr: string[] = this.cardIntValue.toString(2).split("").reverse();
+  get primeNumber(): number {
+    return this.intValueOfCard & 0x3f;
+  }
+
+  get binaryStringValue(): string {
+    const reversedBinaryString: string[] = this.intValueOfCard.toString(2)
+      .split("").reverse();
     const output: string[] = Array.from(
       { length: 33 },
       (_, i) => (i % 5 === 0 ? "\t" : "0"),
     );
 
-    for (let i = 0; i < bstr.length; i++) {
-      output[i + Math.floor(i / 4)] = bstr[i];
+    for (let i = 0; i < reversedBinaryString.length; i++) {
+      output[i + Math.floor(i / 4)] = reversedBinaryString[i];
     }
 
     output.reverse();
@@ -177,61 +203,24 @@ export class Card {
   }
 }
 
-// Helper functions
-// ---------------
-
-/**
- * Returns a list of cards from a list of card strings.
- * @param {string[]} cards A list of card strings.
- * @returns {Card[]} A list of cards.
- * @public
- * @example const cards = cardStringsToInt(["As", "2h", "Td", "Jc"]);
- * cards; // [ Card("As"), Card("2h"), Card("Td"), Card("Jc") ]
- */
-export function cardStringsToInt(cards: string[]): Card[] {
-  return cards.map((card) => new Card(card));
+export function convertCardStringsToPlayingCards(
+  cards: string[],
+): PlayingCard[] {
+  return cards.map((card) => new PlayingCard(card));
 }
 
-/**
- * Returns a prime product from a list of cards.
- * @param {Card[]} cards A list of cards.
- * @returns {number} A prime product.
- * @public
- * @example const cards = primeProductFromHands(["As", "2h", "Td", "Jc"]);
- * cards; // 54694
- */
-export function primeProductFromHands(cards: Card[]): number {
-  return cards.reduce((product, card) => product * card.prime, 1);
+export function getPrimeProductFromCards(cards: PlayingCard[]): number {
+  return cards.reduce((product, card) => product * card.primeNumber, 1);
 }
 
-/**
- * Returns a prime product from a rankbits.
- * @param {number} rankbits A rankbits.
- * @returns {number} A prime product.
- * @public
- * @example const rankbits = 0b0000000;
- * primeProductFromRankbits(rankbits); // 1
- */
-export function primeProductFromRankbits(rankbits: number): number {
+export function getPrimeProductFromRankbits(rankBits: number): number {
   let product = 1;
 
-  for (let i = 0; i < Card.INT_RANKS.length; i++) {
-    if (rankbits & (1 << i)) {
-      product *= Card.PRIMES[i];
+  for (let i = 0; i < PlayingCard.RANK_VALUES.length; i++) {
+    if (rankBits & (1 << i)) {
+      product *= PlayingCard.PRIME_NUMBERS[i];
     }
   }
 
   return product;
-}
-
-/**
- * Returns a string of cards in pretty format from a list of cards.
- * @param {Card[]} cards A list of cards.
- * @returns {string} A string of cards in pretty format.
- * @public
- * @example const cards = prettifyListOfCards(["As", "2h", "Td", "Jc"]);
- * cards; // "[ A ♠ ] [ 2 ♥ ] [ T ♦ ] [ J ♣ ]"
- */
-export function prettifyListOfCards(cards: Card[]): string {
-  return cards.map((card) => card.prettify).join(" ");
 }
