@@ -1,4 +1,4 @@
-import { Card } from "@/card.ts";
+import { PlayingCard as Card } from "@/card.ts";
 
 Deno.bench("Card:  Create 1", () => {
   new Card("As");
