@@ -1,5 +1,4 @@
 import { assertEquals, assertNotEquals, assertThrows } from "@std/testing/asserts.ts";
-
 import {
   convertCardStringsToPlayingCards,
   getPrimeProductFromCards,
@@ -54,11 +53,10 @@ Deno.test("should be able to represent cards", () => {
   const card3 = new PlayingCard("Td");
   assertEquals(card3.repr, 'Card("Td")');
 });
-//
-// /**
-//  * @note: a Deuce (2) is the lowest rank at 0
-//  * @note: an Ace (A) is the highest rank at 12
-//  */
+ /**
+ * @note: a Deuce (2) is the lowest rank at 0
+ * @note: an Ace (A) is the highest rank at 12
+ */
 Deno.test("should be able to determine a card's specific rank", () => {
   const card = new PlayingCard("As");
   assertEquals(card.rank, 12);
@@ -69,13 +67,12 @@ Deno.test("should be able to determine a card's specific rank", () => {
   const card3 = new PlayingCard("Td");
   assertEquals(card3.rank, 8);
 });
-//
-// /**
-//  * @note: a Spade (♠) is mapped to 1
-//  * @note: a Heart (♥) is mapped to 2
-//  * @note: a Diamond (♦) is mapped to 4
-//  * @note: a Club (♣) is mapped to 8
-//  */
+/**
+ * @note: a Spade (♠) is mapped to 1
+ * @note: a Heart (♥) is mapped to 2
+ * @note: a Diamond (♦) is mapped to 4
+ * @note: a Club (♣) is mapped to 8
+ */
 Deno.test("should be able to map a card's Suit correctly", () => {
   const card = new PlayingCard("As");
   assertEquals(card.suit, 1);

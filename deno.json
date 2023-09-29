@@ -2,6 +2,7 @@
   "imports": {
     "@/": "./",
     "@std/": "https://deno.land/std@0.203.0/"
+
   },
   "tasks": {
     "test": "deno test tests/",

@@ -1,5 +1,5 @@
 import { Deck } from "@/deck.ts";
-import { assertEquals, assertNotEquals } from "@std/testing/asserts.ts";
+import { assertEquals, assertNotEquals }  from "@std/assert/mod.ts";
 
 Deno.test("should be able to create a deck of 52 cards", () => {
   const deck = new Deck();
