@@ -1,4 +1,5 @@
-import { assertEquals, assertThrows, assertNotEquals } from "@std/testing/asserts.ts";
+import { assertEquals, assertThrows, assertNotEquals }
+  from "@std/assert/mod.ts";
 import {
   convertCardStringsToPlayingCards,
   getPrimeProductFromCards,
