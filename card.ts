@@ -46,7 +46,7 @@ export class PlayingCard {
    *       Prime numbers are integers greater than 1 that have no positive divisors
    *       other than 1 and themselves.
    */
-  static PRIME_NUMBERS = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41];
+  static PRIME_NUMBERS: number[] = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41];
   /**
    * A mapping variable that maps integer values to corresponding character values for a specific suit.
    * The mapping values are in the form of a string.
